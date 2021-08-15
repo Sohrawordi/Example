@@ -242,14 +242,47 @@ def propensity_feature(dataset,window_size):
     return df
 
 
+def featureset(data):
+    import pickle
+    import pandas as pd
+    aac=amino_acid_composition(data)
+    be=binary_data(data)
+    prim,rprim=prim_rprim(data)
+    psaap=propensity_feature(data,21)
+    
+    
 
+
+    hybrid_sample=aac.copy()
+    for col in be.columns: 
+        hybrid_sample[col]=be[col] 
+    for col in psaap.columns:
+        hybrid_sample[col]=psaap[col] 
+    for col in prim.columns: 
+        hybrid_sample[col]=prim[col]  
+
+    for col in rprim.columns: 
+        hybrid_sample[col]=rprim[col]
+        
+    
+    """
+    
+    cols_index=pickle.load(open('optimal_feature_set_index.pkl','rb'))
+
+    optimal_data=pd.DataFrame()
+    for index in cols_index:
+        optimal_data[index]=hybrid_sample[index]       
+    """    
+        
+    #print(optimal_data)  
+    return hybrid_sample
 
 
 
 
 
 def prediction(seq,window):
-
+    import pickle
 
     up=int(window/2)
 
@@ -278,6 +311,8 @@ def prediction(seq,window):
             raw["Sequence"]=newseq
             raw["Position"]=i+1
             df=df.append(raw,ignore_index=True)
+            
+    df=featureset(df)        
 
     return df
 
@@ -303,8 +338,9 @@ def predict():
             #if seq[len(seq)-1]=='K':
             #seq=seq+"A"
             seq=seq+"XXXXXXXXXXXXXXXXXXXXXXXXX"
+            result=prediction(seq,21)
 
-            return render_template('show.html',n=seq) 
+            return render_template('show.html',n=result) 
 
         else:
             return "The length of the given protein is less than 21 or it does not contain any Lysine residue<br> Please try again with another larger protein"
