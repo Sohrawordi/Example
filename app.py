@@ -265,17 +265,17 @@ def featureset(data):
         hybrid_sample[col]=rprim[col]
         
     
-    """
+    
     
     cols_index=pickle.load(open('optimal_feature_set_index.pkl','rb'))
 
     optimal_data=pd.DataFrame()
     for index in cols_index:
         optimal_data[index]=hybrid_sample[index]       
-    """    
+      
         
     #print(optimal_data)  
-    return hybrid_sample
+    return optimal_data
 
 
 
@@ -283,7 +283,7 @@ def featureset(data):
 
 def prediction(seq,window):
     import pickle
-
+    model=pickle.load(open('pickle_model.pkl','rb')) 
     up=int(window/2)
 
     listk=[i for i, letter in enumerate(seq) if letter == 'K']
@@ -312,9 +312,9 @@ def prediction(seq,window):
             raw["Position"]=i+1
             df=df.append(raw,ignore_index=True)
             
-    df=featureset(df)        
-
-    return df
+    x=featureset(df)        
+    pred=model.predict(x)
+    return pred
 
 
 
