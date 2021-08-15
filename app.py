@@ -282,8 +282,6 @@ def featureset(data):
 
 
 def prediction(seq,window):
-    import pickle
-
     up=int(window/2)
 
     listk=[i for i, letter in enumerate(seq) if letter == 'K']
@@ -312,8 +310,16 @@ def prediction(seq,window):
             raw["Position"]=i+1
             df=df.append(raw,ignore_index=True)
             
-    df=featureset(df)        
+    df=featureset(df)
+    train=pd.read_csv('all_samples_optimal_features.csv') 
+    label=train.pop("Class")
+    from sklearn.svm import SVC
+    classifier =SVC(kernel='rbf', C=5,gamma=1,probability=True) 
+    model=classifier.fit(train, label)
+    pred=model.predict(df)
 
+        
+    
     return df
 
 
