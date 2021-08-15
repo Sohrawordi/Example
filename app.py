@@ -283,7 +283,7 @@ def featureset(data):
 
 def prediction(seq,window):
     import pickle
-    model=pickle.load(open('pickle_model.pkl','rb')) 
+
     up=int(window/2)
 
     listk=[i for i, letter in enumerate(seq) if letter == 'K']
@@ -312,9 +312,9 @@ def prediction(seq,window):
             raw["Position"]=i+1
             df=df.append(raw,ignore_index=True)
             
-    x=featureset(df)        
-    #pred=model.predict(x)
-    return x
+    df=featureset(df)        
+
+    return df
 
 
 
