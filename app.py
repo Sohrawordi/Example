@@ -313,8 +313,8 @@ def prediction(seq,window):
             df=df.append(raw,ignore_index=True)
             
     x=featureset(df)        
-    pred=model.predict(x)
-    return pred
+    #pred=model.predict(x)
+    return x
 
 
 
