@@ -3,7 +3,7 @@
 <!--From https://codepen.io/frytyler/pen/EGdtg-->
 <head>
   <meta charset="UTF-8">
-  <title>Result</title>
+  <title>ML API</title>
 
   
 </head>
@@ -16,11 +16,29 @@
  
  
  
- {% block content %}
+{% block content %}
 
  
  
-{{n}}
+ <table border="1" align="center">
+        <thead>
+            <tr>
+                <th >Protein Fragments</th>
+                <th >Position</th>
+                <th >Results</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for key,value in n.iterrows() %}
+            <tr>
+                <td>{{value[0][0:10]}}<b style="color: red">{{value[0][10]}}</b>{{value[0][11:22]}}</td>
+                <td>{{value[1]}}</td>
+                <td>{{value[2]}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ 
  
  
  
