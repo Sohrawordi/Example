@@ -314,7 +314,7 @@ def prediction(seq,window):
     train=pd.read_csv('all_samples_optimal_features.csv') 
     label=train.pop("Class")
     from sklearn.svm import SVC
-    classifier =SVC(kernel='rbf', C=2,gamma=1,probability=True) 
+    classifier =SVC(kernel='rbf', C=64,gamma=0.0005,probability=True) 
     model=classifier.fit(train, label)
     pred=model.predict(x)
     df['Class']=pred
@@ -330,7 +330,20 @@ app = Flask(__name__)
 def home():
 
     return render_template('index.html')
+@app.route('/about')
+def about_me():
+    return render_template('about.html')
 
+@app.route('/download')
+def download_file():
+    file='raw_data.pdf'
+    return send_file(file,as_attachment=True)
+
+
+
+@app.route('/help')
+def help():
+    return render_template('help.html')
 
 
 @app.route('/predict',methods=['POST']) 
@@ -345,11 +358,12 @@ def predict():
             #seq=seq+"A"
             seq=seq+"XXXXXXXXXXXXXXXXXXXXXXXXX"
             result=prediction(seq,21)
+            result['Class'].replace({0: "Non-Formylated Lysine", 1: "Formylated Lysine"}, inplace=True)
 
             return render_template('show.html',n=result) 
 
         else:
-            return "The length of the given protein is less than 21 or it does not contain any Lysine residue<br> Please try again with another larger protein"
+            return "The length of the given protein may be less than 21 <br> You have entered blank space<br>   The protein does not contain any Lysine residue<br> <b>Please try again with another larger protein</b>"
 
         
         
